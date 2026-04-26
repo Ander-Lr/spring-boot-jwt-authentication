@@ -2,6 +2,7 @@ package com.example.JWT_SpringBoot.auth.repository;
 
 import com.example.JWT_SpringBoot.user.User;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,5 +33,6 @@ public class Token {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
+    @JsonIgnore
     public User user;
 }
