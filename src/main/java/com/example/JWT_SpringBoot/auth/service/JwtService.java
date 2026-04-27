@@ -1,5 +1,4 @@
 package com.example.JWT_SpringBoot.auth.service;
-
 import com.example.JWT_SpringBoot.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -11,7 +10,6 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
 import org.springframework.stereotype.Service;
-
 @Service
 public class JwtService {
     @Value("${application.security.jwt.secret-key}")
@@ -20,7 +18,6 @@ public class JwtService {
     private long jwtExpiration;
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
-
     public String extractUsername(final String token){
         final Claims jwtToken = Jwts.parser()
                 .verifyWith(getSignInKey())
@@ -29,11 +26,9 @@ public class JwtService {
                 .getPayload();
         return jwtToken.getSubject();
     }
-
     public String generateToken(final User user) {
         return buildToken(user, jwtExpiration);
     }
-
     public String generateRefreshToken(final User user) {
         return buildToken(user, refreshExpiration);
     }
@@ -48,16 +43,13 @@ public class JwtService {
                 .signWith(getSignInKey())
                 .compact();
     }
-
     public boolean isTokenValid(final String token, final User user){
         final String username = extractUsername(token);
         return (username.equals(user.getEmail())) && !isTokenExpired(token);
     }
-
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
-
     private Date extractExpiration(String token) {
         final Claims jwtToken = Jwts.parser()
                 .verifyWith(getSignInKey())
@@ -66,10 +58,8 @@ public class JwtService {
                 .getPayload();
         return jwtToken.getExpiration();
     }
-
     private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
 }
